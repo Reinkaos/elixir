@@ -1,0 +1,2 @@
+defmodule GettingStarted do
+end
