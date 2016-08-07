@@ -1,6 +1,9 @@
 defmodule Rumbl.Auth do
   import Plug.Conn
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
+  import Phoenix.Controller # for put_flash and redirect used in authenticate_user
+  # We alias this so that we do not cause a circular dependancy when we use the authenticate_user method in our router
+  alias Rumbl.Router.Helpers
 
   def init(opts) do
     # Extract the repo
@@ -44,5 +47,18 @@ defmodule Rumbl.Auth do
   # delete_session(conn, :user_id)
   def logout(conn) do
     configure_session(conn, drop: true)
+  end
+
+  # if there is a current user, return the unchanged connection
+  # otherwise redirect the user and halt the connection
+  def authenticate_user(conn, _opts) do
+    if conn.assigns.current_user do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You must be logged in to access that page")
+      |> redirect(to: Helpers.page_path(conn, :index))
+      |> halt()
+    end
   end
 end

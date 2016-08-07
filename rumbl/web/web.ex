@@ -36,6 +36,8 @@ defmodule Rumbl.Web do
 
       import Rumbl.Router.Helpers
       import Rumbl.Gettext
+      # this allows the authenticate_user function to be used in controllers
+      import Rumbl.Auth, only: [authenticate_user: 2]
     end
   end
 
@@ -58,6 +60,9 @@ defmodule Rumbl.Web do
   def router do
     quote do
       use Phoenix.Router
+
+      # this allows the authenticate_user function to be called in routers
+      import Rumbl.Auth, only: [authenticate_user: 2]
     end
   end
 

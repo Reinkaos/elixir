@@ -7,6 +7,7 @@ defmodule Rumbl.User do
     field :username, :string
     field :password, :string, virtual: true # This creates a field that does not persist to the DB
     field :password_hash, :string
+    has_many :videos, Rumbl.Video
 
     timestamps
   end
