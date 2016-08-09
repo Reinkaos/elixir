@@ -4,7 +4,7 @@ defmodule Rumbl.Auth do
   import Phoenix.Controller # for put_flash and redirect used in authenticate_user
   # We alias this so that we do not cause a circular dependancy when we use the authenticate_user method in our router
   alias Rumbl.Router.Helpers
-
+  
   def init(opts) do
     # Extract the repo
     Keyword.fetch!(opts, :repo)
@@ -13,9 +13,15 @@ defmodule Rumbl.Auth do
   def call(conn, repo) do
     # call recieves the repo from init
     user_id = get_session(conn, :user_id)
-    user    = user_id && repo.get(Rumbl.User, user_id)
-    # this allows the current_user to be accessed further down the pipeline
-    assign(conn, :current_user, user)
+
+    cond do
+      user = conn.assigns[:current_user] ->
+        conn
+      user = user_id && repo.get(Rumbl.User, user_id) ->
+        assign(conn, :current_user, user)
+      true ->
+        assign(conn, :current_user, nil)
+    end
   end
 
   def login(conn, user) do

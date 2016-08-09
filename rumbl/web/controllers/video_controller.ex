@@ -4,6 +4,8 @@ defmodule Rumbl.VideoController do
   alias Rumbl.Video
   alias Rumbl.Category
 
+  import IEx
+
   # this transforms any empty string passed into nil
   plug :scrub_params, "video" when action in [:create, :update]
   plug :load_categories when action in [:new, :create, :edit, :update]
