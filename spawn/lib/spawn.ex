@@ -1,0 +1,2 @@
+defmodule Spawn do
+end
